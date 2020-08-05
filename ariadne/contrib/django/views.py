@@ -150,7 +150,7 @@ class GraphQLView(TemplateView):
     def get_context_for_request(self, request: HttpRequest) -> Optional[ContextValue]:
         if callable(self.context_value):
             return self.context_value(request)  # pylint: disable=not-callable
-        return self.context_value or {"request": request}
+        return self.context_value or request #{"request": request} breaking for 0.11.0
 
     def get_extensions_for_request(
         self, request: HttpRequest, context: Optional[ContextValue]
