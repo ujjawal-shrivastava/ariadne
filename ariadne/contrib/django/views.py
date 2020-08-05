@@ -73,7 +73,24 @@ class GraphQLView(TemplateView):
 
         success, result = self.execute_query(request, data)
         status_code = 200 if success else 400
-        return JsonResponse(result, status=status_code)
+        response = JsonResponse(result, status=status_code)
+
+        try:
+            if result["data"] and result["data"]["login"] and result["data"]["login"]["token"]:
+                if result["data"]["login"]["long"]==True:
+                    response.set_cookie('auth',result["data"]["login"]["token"], httponly=True, expires=(datetime.datetime.now()+datetime.timedelta(days=7)))
+                else:
+                    response.set_cookie('auth',result["data"]["login"]["token"], httponly=True)
+        except KeyError:
+            pass
+
+        try:
+            if result["data"] and result["data"]["logout"]:
+                response.delete_cookie('auth')
+        except KeyError:
+            pass
+        
+        return response
 
     def extract_data_from_request(self, request: HttpRequest):
         content_type = request.content_type or ""
