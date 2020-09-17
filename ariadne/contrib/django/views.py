@@ -79,9 +79,9 @@ class GraphQLView(TemplateView):
         try:
             if result["data"] and result["data"]["login"] and result["data"]["login"]["token"]:
                 if result["data"]["login"]["long"]==True:
-                    response.set_cookie('auth',result["data"]["login"]["token"],samesite='None', domain="app.deform.ujjawal.co",httponly=True, expires=(datetime.datetime.now()+datetime.timedelta(days=7)))
+                    response.set_cookie('auth',result["data"]["login"]["token"],samesite='None',secure=True, domain="app.deform.ujjawal.co",httponly=True, expires=(datetime.datetime.now()+datetime.timedelta(days=7)))
                 else:
-                    response.set_cookie('auth',result["data"]["login"]["token"],samesite='None', domain="app.deform.ujjawal.co", httponly=True)
+                    response.set_cookie('auth',result["data"]["login"]["token"],samesite='None',secure=True, domain="app.deform.ujjawal.co", httponly=True)
         except KeyError:
             pass
 
